@@ -8,7 +8,7 @@ function getImages() {
         // headers: { 'Content-Type': 'application/json' }
     };
 
-    return fetch('http://localhost:3000/api', requestOptions)
+    return fetch('http://localhost:3001/api', requestOptions)
         .then(response => {
             if (!response.ok) {
                 return Promise.reject(response.statusText);
