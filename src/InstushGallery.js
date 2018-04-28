@@ -27,7 +27,7 @@ class InstushGallery extends React.Component {
         };
 
         this.images = [];
-        instushService.getImages().then((result) => {
+        instushService.getImages('stmobileapps').then((result) => {
             for(let i=0;i<result.length;i++){
                 let obj = {
                     thumbnail: result[i].url,
