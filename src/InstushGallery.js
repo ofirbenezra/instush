@@ -6,9 +6,11 @@ const PREFIX_URL = 'https://raw.githubusercontent.com/xiaolin/react-image-galler
 
 class InstushGallery extends React.Component {
 
+
     constructor(){
 
         super();
+        this.minTagId = -1;
         this.state = {
             showIndex: false,
             slideOnThumbnailHover: false,
@@ -27,18 +29,25 @@ class InstushGallery extends React.Component {
         };
 
         this.images = [];
-        instushService.getImages('stmobileapps').then((result) => {
-            for(let i=0;i<result.length;i++){
-                let obj = {
-                    thumbnail: result[i].url,
-                    original: result[i].url,
-                    embedUrl: 'https://www.youtube.com/embed/4pSzhZ76GdM?autoplay=1&showinfo=0',
-                    renderItem: this._renderVideo.bind(this)
+        var _this = this;
+        this.interval = setInterval(() => {
+            instushService.getImages('stmobileapps', _this.minTagId).then((result) => {
+                for(let i=0;i<result.data.length;i++){
+                    let obj = {
+                        thumbnail: result.data[i].url,
+                        original: result.data[i].url,
+                        embedUrl: 'https://www.youtube.com/embed/4pSzhZ76GdM?autoplay=1&showinfo=0',
+                        renderItem: this._renderVideo.bind(this)
+                    }
+                    this.images.push(obj);
                 }
-                this.images.push(obj);
-            }
-            // this.images.concat(this._getStaticImages());
-        });
+                if(result.paging.minTagId){
+                    _this.minTagId = result.paging.minTagId;
+                }
+                // this.images.concat(this._getStaticImages());
+            });
+        }, 15000);
+
 
         // this.images = [
         //     {
@@ -79,6 +88,10 @@ class InstushGallery extends React.Component {
             this._imageGallery.pause();
             this._imageGallery.play();
         }
+    }
+
+    componentWillUnmount(){
+        clearInterval(this.interval);
     }
 
     render() {

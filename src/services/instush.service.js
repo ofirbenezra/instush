@@ -2,13 +2,14 @@ export const instushService = {
     getImages
 };
 
-function getImages(tag) {
+function getImages(tag, minTagId) {
     const requestOptions = {
         method: 'GET',
         // headers: { 'Content-Type': 'application/json' }
     };
 
-    return fetch('http://localhost:3001/api?tag=' + tag, requestOptions)
+
+    return fetch('http://localhost:3001/api?tag=' + tag +'&minTagId=' + minTagId, requestOptions)
         .then(response => {
             if (!response.ok) {
                 return Promise.reject(response.statusText);
@@ -17,4 +18,6 @@ function getImages(tag) {
             return response.json();
         })
         .then(data => data);
+
+
 }
